@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <style>
+        #canvas-container {
+            position: relative;
+            height: 120%;
+            width: 80%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="canvas-container">
+        <canvas id="bar-chart" width="400" height="400"></canvas>
+    </div>
+
+    <script>
+
+        //  fetch('../Data/waste2.csv')
+        fetch('../wine.csv')
+            .then(response => response.text())
+            .then((data) => {
+                const labels = [], valuesprice = [], valuespoints = [];
+                const rows = data.split("\n");
+                rows.forEach(r => {
+                    const item = r.split(",");
+                    labels.push(item[0]);
+                    valuesprice.push(+item[2]); 
+                    valuespoints.push(+item[1]); 
+
+                });
+                labels.shift();
+                valuesprice.shift();
+                valuespoints.shift();
+
+                draw(labels, [valuesprice, valuespoints]);
+            });
+
+        function draw(labels, values) {
+            const canvas = document.getElementById("bar-chart");
+            const ctx = canvas.getContext("2d");
+            new Chart(ctx, {
+                type: "horizontalBar",
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: "Price",
+                            data: values[0],
+                            backgroundColor: "hsla(20,100%,50%,1)",
+                        }, {
+                            label: "Points",
+                            data: values[1],
+                            backgroundColor: "hsla(260,100%,50%,1)",
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    title: {
+                        display: true,
+                        text: 'Price Based On Countries & Provinces',
+                        fontSize: 16
+                    },
+                     
+                }
+            });
+        }
+
+
+    </script>
+
+</body>
+
+</html>
